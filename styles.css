@@ -1,0 +1,13 @@
+.copy-comment-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 12px;
+  padding: 2px 6px;
+  background: #84c98b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1000;
+}

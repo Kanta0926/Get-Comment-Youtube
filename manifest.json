@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Get Comment Youtube",
+  "version": "1.0",
+  "description": "Copy a YouTube Copy & URL by cursor over it.",
+  "permissions": ["scripting", "clipboardWrite"],
+  "host_permissions": ["https://www.youtube.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}
