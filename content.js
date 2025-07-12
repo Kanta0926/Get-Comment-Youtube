@@ -36,7 +36,7 @@ function addHoverListeners() {
   });
 }
 
-// スクロール表示に対しての監視
+// スクロール表示に対し監視
 const observer = new MutationObserver(addHoverListeners);
 observer.observe(document.body, { childList: true, subtree: true });
 
