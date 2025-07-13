@@ -1,14 +1,19 @@
 // URL、コメントのコピー処理
+let currentVisibleButton = null;
+
 function createCopyButton(commentElement) {
   const btn = document.createElement("button");
   btn.innerText = "Copy";
   btn.className = "copy-comment-btn";
+
   btn.onclick = (e) => {
     e.stopPropagation();
     const commentText = commentElement.innerText;
     const url = window.location.href;
     const fullText = `URL: ${url}\ncomment『 ${commentText}』`;
     navigator.clipboard.writeText(fullText);
+    btn.style.display = "none";
+    currentVisibleButton = null;
   };
   return btn;
 }
@@ -26,18 +31,48 @@ function addHoverListeners() {
 
       comment.dataset.copyAttached = "true";
 
-      comment.addEventListener("mouseenter", () => {
+      comment.addEventListener("mouseenter", (e) => {
+        // 他のボタンが表示中なら非表示にする
+        if (currentVisibleButton && currentVisibleButton !== btn) {
+          currentVisibleButton.style.display = "none";
+        }
         btn.style.display = "inline-block";
-      });
-      comment.addEventListener("mouseleave", () => {
-        btn.style.display = "none";
+        currentVisibleButton = btn;
       });
     }
   });
 }
 
-// スクロール表示に対し監視
-const observer = new MutationObserver(addHoverListeners);
-observer.observe(document.body, { childList: true, subtree: true });
+// クリックでボタン非表示処理
+document.addEventListener("click", (e) => {
+  const isInsideComment = e.target.closest("#content-text");
+  if (!isInsideComment && currentVisibleButton) {
+    currentVisibleButton.style.display = "none";
+    currentVisibleButton = null;
+  }
+});
 
+// スクロール、新着順切り替えに対して監視
 addHoverListeners();
+
+// commentsを監視
+function observeCommentsContainer() {
+  const commentsContainer = document.querySelector("#comments");
+
+  //読み込まれてない場合
+  if (!commentsContainer) {
+    setTimeout(observeCommentsContainer, 1000);
+    return;
+  }
+
+  const observer = new MutationObserver(() => {
+    addHoverListeners();
+  });
+
+  observer.observe(commentsContainer, {
+    childList: true,
+    subtree: true,
+  });
+}
+
+observeCommentsContainer();
